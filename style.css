@@ -40,7 +40,7 @@ header img {
   margin: 0 3em 0em 7em;
 }
 .tabs a {
-padding: 0 1em;
+padding: 0 1em 1em 2em ;
 }
 .tabs a:hover {
   background-color:#FFB6C1;
@@ -78,20 +78,38 @@ main.undersider {
 }
 main.undersider img{
    margin: 0 1em 1em;
- width: 45vw;
+ width: 27vw;
   height: 45vw;
   border:2px solid black;
   object-fit: cover;
 }
 
-main.undersidebillede img{
-  margin: 0em 0em 0em 17em;
-  width: 45vw;
-   height: 45vw;
-   border:2px solid black;
-   object-fit: cover;
+main.undersider p{
+margin: 0 1em
 }
+
+main.forhandlere {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+    padding:0em 1em 2em;
+}
+main.forhandlere img{
+   margin: 0em 1em 1em;
+ width: 27vw;
+  border:2px solid black;
+  object-fit: cover;
+}
+
+
+.postcodesearch {
+  margin:-1em 25% 1em 25%;
+}
+.postcodesearch input { font-size: 1em;}
+.postcodesearch button { font-size: 1em;}
 
 #map {
   height: 400px;
+  width: 50%;
+  margin: 0 25%;
 }

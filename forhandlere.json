@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [12.54, 55.69]
+      },
+      "properties": {
+        "navn": "Netto",
+        "adresse": "Falkoner Alle 1-3, 2000 Frederiksberg",
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [12.55, 55.7]
+      },
+      "properties": {
+        "navn": "Føtex",
+        "adresse": "Vesterbrogade 74-76, 1620 København",
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [12.56, 55.71]
+      },
+      "properties": {
+        "navn": "Super Brugsen",
+        "adresse": "Finsensvej 14B, 2000 Frederiksberg",
+      }
+    }]
+}

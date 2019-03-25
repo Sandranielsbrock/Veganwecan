@@ -107,4 +107,29 @@
     // Add scale line to map
     L.control.scale({imperial: false}).addTo(map); // disable feet units
 
+
+    var knn;
+    fetch("hmm.json").then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      var forhandlere = L.geoJSON(data);
+      forhandlere.addTo(map);
+      knn = leafletKnn(forhandlere)
+    });
+
+    var search = document.querySelector("#searchpostcode");
+    var postcode = document.querySelector("#postcode");
+    search.addEventListener("click", function () {
+      fetch("https://dawa.aws.dk/postnumre/" + postcode.value).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        var center = L.latLng(data.visueltcenter[1], data.visueltcenter[0]);
+        map.panTo(center);
+        var nearest = knn.nearest(center, 500000);
+        console.log("hey", nearest);
+      });
+
+    });
+
+
 })();
