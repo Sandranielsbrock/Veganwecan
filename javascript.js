@@ -108,14 +108,20 @@
     L.control.scale({imperial: false}).addTo(map); // disable feet units
 
 
-    var knn;
-    fetch("hmm.json").then(function (res) {
+    var forhandlere = [];
+    fetch("forhandlere.json").then(function (res) {
       return res.json();
     }).then(function (data) {
-      var forhandlere = L.geoJSON(data);
-      forhandlere.addTo(map);
-      knn = leafletKnn(forhandlere)
+      L.geoJSON(data, {
+        onEachFeature: (feature, layer) => forhandlere.push(layer)
+      }).addTo(map);
+      //knn = leafletKnn(forhandlere)
     });
+
+    function showNearest(nearest) {
+      var results = document.querySelector("#searchresults");
+      results.innerHTML = nearest.map(e => `<p>${e.layer.feature.properties.navn}: ${e.layer.feature.properties.adresse} (${(e.distance / 1000).toLocaleString("da-DK", {maximumFractionDigits: 1})} km)</p>`).join("");
+    }
 
     var search = document.querySelector("#searchpostcode");
     var postcode = document.querySelector("#postcode");
@@ -125,8 +131,11 @@
       }).then(function (data) {
         var center = L.latLng(data.visueltcenter[1], data.visueltcenter[0]);
         map.panTo(center);
-        var nearest = knn.nearest(center, 500000);
-        console.log("hey", nearest);
+        var nearest = L.GeometryUtil.nClosestLayers(map, forhandlere, center, 3);
+        showNearest(nearest);
+        //var nearest = knn.nearest(center, 500000);
+        console.log("hey", nearest, forhandlere);
+        console.log(nearest[0].layer.feature.properties.adresse);
       });
 
     });
