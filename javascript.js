@@ -139,6 +139,9 @@
       });
 
     });
-
+    map.locate({
+            setView: true,
+            maxZoom: 16
+        });
 
 })();
