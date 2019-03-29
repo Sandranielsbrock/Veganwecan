@@ -134,5 +134,6 @@ main.forhandlere img{
    position: absolute;
   left: 20px;
   width: 275px;
-  font-size: 30px
+  font-size: 30px;
+  text-align:right;
 }

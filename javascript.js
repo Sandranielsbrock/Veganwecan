@@ -120,7 +120,7 @@
 
     function showNearest(nearest) {
       var results = document.querySelector("#searchresults");
-      results.innerHTML = nearest.map(e => `<p>${e.layer.feature.properties.navn}: ${e.layer.feature.properties.adresse} (${(e.distance / 1000).toLocaleString("da-DK", {maximumFractionDigits: 1})} km)</p>`).join("");
+      results.innerHTML = nearest.map(e => `<p>${e.layer.feature.properties.navn}: ${e.layer.feature.properties.adresse} <br> (${(e.distance / 1000).toLocaleString("da-DK", {maximumFractionDigits: 1})} km)</p>`).join("");
     }
 
     var search = document.querySelector("#searchpostcode");
