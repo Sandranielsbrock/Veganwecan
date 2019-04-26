@@ -42,18 +42,18 @@
         center: [55.8, 11.4], // Set center location
         zoom: 9, // Set zoom level
         minzoom: 0,
-        maxzoom: 13
+        maxzoom: 16
     });
 
     // Define layers
     var ortofotowmts = L.tileLayer('https://services.kortforsyningen.dk/orto_foraar?token=' + kftoken + '&request=GetTile&version=1.0.0&service=WMTS&Layer=orto_foraar&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}', {
-	minZoom: 0,
-        maxZoom: 13,
+	      minZoom: 0,
+        maxZoom: 16,
         attribution: myAttributionText,
         crossOrigin: true,
         zoom: function () {
             var zoomlevel = map._animateToZoom ? map._animateToZoom : map.getZoom();
-            console.log("WMTS: " + zoomlevel);
+            //console.log("WMTS: " + zoomlevel);
             if (zoomlevel < 10)
                 return 'L0' + zoomlevel;
             else
@@ -68,7 +68,7 @@
         token: kftoken,
         format: 'image/png',
         attribution: myAttributionText
-    });
+    }).addTo(map);
 
     // Matrikelskel overlay [WMS:mat]
     var matrikel = L.tileLayer.wms('https://services.kortforsyningen.dk/mat', {
@@ -79,7 +79,7 @@
         attribution: myAttributionText,
         continuousWorld: true,
         minZoom: 9
-    }).addTo(map); // addTo means that the layer is visible by default
+    }); // addTo means that the layer is visible by default
 
     // Hillshade overlay [WMS:dhm]
     var hillshade = L.tileLayer.wms('https://services.kortforsyningen.dk/dhm', {
@@ -120,7 +120,7 @@
 
     function showNearest(nearest) {
       var results = document.querySelector("#searchresults");
-      results.innerHTML = nearest.map(e => `<p>${e.layer.feature.properties.navn}: ${e.layer.feature.properties.adresse} <br> (${(e.distance / 1000).toLocaleString("da-DK", {maximumFractionDigits: 1})} km)</p>`).join("");
+      results.innerHTML = nearest.map(e => `<p>${e.layer.feature.properties.navn}: ${e.layer.feature.properties.adresse} <br> (${L.GeometryUtil.readableDistance(e.distance)})</p>`).join("");
     }
 
     var search = document.querySelector("#searchpostcode");
@@ -133,15 +133,42 @@
         map.panTo(center);
         var nearest = L.GeometryUtil.nClosestLayers(map, forhandlere, center, 3);
         showNearest(nearest);
+        let points = nearest.map(x => [x.latlng.lat, x.latlng.lng]);
+        points.push(center);
+        map.flyToBounds(points, { padding: [10,10]});
         //var nearest = knn.nearest(center, 500000);
-        console.log("hey", nearest, forhandlere);
-        console.log(nearest[0].layer.feature.properties.adresse);
+
       });
 
     });
+    postcode.addEventListener("keypress", e => {
+      if (e.keyCode == 13) {
+        search.click();
+      }
+    });
     map.locate({
-            setView: true,
-            maxZoom: 16
-        });
+      setView: false,
+      maxZoom: 16
+    });
+
+    let marker;
+    function onlocationchange(e) {
+      map.flyTo(e.latlng);
+      var nearest = L.GeometryUtil.nClosestLayers(map, forhandlere, e.latlng, 3);
+      showNearest(nearest);
+      let us = [e.latlng.lat, e.latlng.lng];
+      let points = nearest.map(x => [x.latlng.lat, x.latlng.lng]);
+      points.push(us);
+      map.flyToBounds(points, { padding: [10,10]});
+      if (!marker) {
+        marker = L.circleMarker(e.latlng, {
+          color: '#ff0000'
+        }).addTo(map);
+      }
+      else {
+        marker.panTo(us);
+      }
+    }
+    map.on('locationfound', onlocationchange);
 
 })();
